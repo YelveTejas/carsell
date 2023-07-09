@@ -8,7 +8,7 @@ const Home = () => {
   const [data, setData] = useState([]);
  useEffect(()=>{
     axios
-    .get("http://localhost:4000/getpost")
+    .get("https://carsapp-3.onrender.com/getpost")
     .then((res) => {
       console.log(res.data.data);
       setData(res.data.data)

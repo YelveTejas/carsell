@@ -4,7 +4,8 @@ import { CloudinaryContext, Widget } from 'cloudinary-react';
 import axios from 'axios';
 import Navbar from '../component/Navbar';
 import { DataContext } from '../component/DataProvide';
-
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const post = {
     image:'',
@@ -13,6 +14,7 @@ const post = {
     name:''
 }
 const Create = () => {
+    const [loading,setLoading]= useState(false)
     const {user} = useContext(DataContext)
     const [photo,setPhoto] = useState('')
     const [data,setData] = useState(post)
@@ -22,12 +24,14 @@ const Create = () => {
       formData.append('file',image)
       formData.append('upload_preset','i3s54nhg ')
       console.log(formData)
+      setLoading(true)
+      toast.info('Image is uploading wait for while..')
       axios.post('https://api.cloudinary.com/v1_1/ds1miblwi/image/upload',formData)
       .then((res)=>{
         const imageurl = res.data.secure_url
-      
+        setLoading(false)
         setPhoto(imageurl)
-        alert('Image Added')
+      
       }).catch((error) => {
         console.error('Error uploading image to Cloudinary:', error);
       });
@@ -42,14 +46,17 @@ const Create = () => {
             image: photo, // Replace the image field with the uploaded image URL
           };
           console.log(postData)
-        axios.post('http://localhost:4000/carpost',postData)
+          setLoading(true)
+        axios.post('https://carsapp-3.onrender.com/carpost',postData)
         .then((res)=>{
             console.log(res)
             if(res.status==200){
-                alert('Data Posted Successfully')
+                setLoading(false)
+                toast.success('Data Posted Successfully')
             }
         }).catch((err)=>{
             console.log(err)
+            toast.error('Error while posting data')
         })
     }
   return (
@@ -80,7 +87,7 @@ const Create = () => {
             value={data.desc}
             onChange={(e) => setData({ ...data, desc: e.target.value })}
           />
-          <Button mt="10px" w="full" onClick={handleSubmit}>
+          <Button mt="10px" w="full" onClick={handleSubmit} isLoading={loading}>
             Post
           </Button>
         </FormControl>

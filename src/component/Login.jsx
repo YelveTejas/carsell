@@ -12,11 +12,14 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DataContext } from "./DataProvide";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 const login ={
   email:'',
   password:''
 }
-const Login = ({setAuthenticate}) => {
+const Login = () => {
+  const [loading,setLoading] = useState(false)
   const [data,setData] = useState(login)
   const [show, setShow] = useState(false);
   const navigate = useNavigate()
@@ -29,14 +32,19 @@ const Login = ({setAuthenticate}) => {
   }
   
   const handlelogin=()=>{
-    axios.post('http://localhost:4000/login',data)
+    setLoading(true)
+    axios.post('https://carsapp-3.onrender.com/login',data)
     .then((res)=>{
        if(res.status==200){
+        setLoading(false)
         console.log(res)
         setUser({name:res.data.name})
+         toast.success("Login Successful")
         navigate('/home')
        }
     }).catch((err)=>{
+      toast.info("Email or Password is wrong")
+      setLoading(false)
       console.log(err)
     })
   }
@@ -63,12 +71,12 @@ const Login = ({setAuthenticate}) => {
         <InputGroup>
           <Input name='password'  onChange={(e)=>handlechage(e)}  type={show ? "text" : "password"} placeholder="Enter Your password" px='10px'></Input>
           <InputRightElement padding='10px'>
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
+            <Button h="1.75rem" size="sm" onClick={handleClick} >
               {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
-        <Button mt="10px" w="full" onClick={()=>handlelogin()}>
+        <Button mt="10px" w="full" onClick={()=>handlelogin()} isLoading={loading}>
           login
         </Button>
         <Text >

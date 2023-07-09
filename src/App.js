@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Navbar from "./component/Navbar";
 import Authentication from "./component/Authentication";
+import { ToastContainer } from "react-toastify";
 
 import {
   Navigate,
@@ -15,38 +16,34 @@ import Home from "./Pages/Home";
 import Create from "./Pages/Create";
 import { useState } from "react";
 import DataProvider from "./component/DataProvide";
-
-const Privateroute = ({ setAuthenticate }) => {
-  return setAuthenticate ? (
-    <>
-      <Outlet />
-    </>
-  ) : (
-    <Navigate to="/login"></Navigate>
-  );
-};
+import Privateroute from "./component/Privateroute";
 
 function App() {
-  const [authenticate, setAuthenticate] = useState(false);
   return (
     <>
       <DataProvider>
         <div className="App">
-          {/* <Navbar/> */}
           <Routes>
-            <Route
-              path="/login"
-              element={<Login setAuthenticate={setAuthenticate} />}
-            ></Route>
-
+            <Route path="/login" element={<Login />}></Route>
             <Route path="/" element={<Authentication />}></Route>
-
-            <Route path="/home" element={<Home />}></Route>
+            <Route
+              path="/home"
+              element={
+                <Privateroute>
+                  <Home />
+                </Privateroute>
+              }
+            ></Route>
 
             <Route path="/create" element={<Create />}></Route>
           </Routes>
         </div>
       </DataProvider>
+      <ToastContainer
+        position="top-center"
+        autoClose={4000}
+        closeOnClick={true}
+      />
     </>
   );
 }

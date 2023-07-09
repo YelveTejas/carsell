@@ -1,8 +1,13 @@
-import { Box, Text } from "@chakra-ui/react";
-import React from "react";
+import { Box, Button, Text } from "@chakra-ui/react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { DataContext } from "./DataProvide";
 
 const Navbar = () => {
+  const {user} = useContext(DataContext)
+  const handleClick=()=>{
+       user.name = ''
+  }
   return (
     <Box
       w="full"
@@ -18,7 +23,9 @@ const Navbar = () => {
         <Text>Add Car</Text>
       </Link>
       <Link to='/login'>
+        <Box onClick={handleClick}>
         <Text>Logout</Text>
+        </Box>
       </Link>
     </Box>
   );
