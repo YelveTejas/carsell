@@ -98,9 +98,3 @@ const Create = () => {
 }
 
 export default Create
-/*
-
-Unsigned uploading enabled
-Name	Mode	Settings	
-i3s54nhg 
-*/
